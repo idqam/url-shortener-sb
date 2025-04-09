@@ -1,0 +1,67 @@
+# === Java / Maven ===
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+**/logs/
+**/*.log
+**/*.tmp
+
+# === IDEs ===
+# IntelliJ
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# VS Code
+.vscode/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# === OS / System Files ===
+.DS_Store
+Thumbs.db
+
+# === Environment Files ===
+*.env
+.env.local
+.env.development
+.env.production
+
+# === Spring Boot Config ===
+src/main/resources/application.properties
+src/main/resources/application.yml
+src/main/resources/*.secret.*
+
+# === Build Tools ===
+/out/
+/build/
+
+# === Docker ===
+*.pid
+*.seed
+docker-compose.override.yml
+
+# === Logs ===
+*.log
+logs/
+*.out
+nohup.out
+
+# === Test Reports ===
+/surefire-reports/
+/jacoco.exec
+
+# === Misc ===
+*.bak
+*.swp
+*.tmp
+*.orig
+*~
+
+# === Node (if you're using React frontend inside) ===
+node_modules/
+dist/
+build/
