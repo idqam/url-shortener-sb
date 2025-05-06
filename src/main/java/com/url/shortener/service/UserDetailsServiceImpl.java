@@ -18,7 +18,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
 
-
+    //this tells spring security how to load a user once they are authenticated
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
