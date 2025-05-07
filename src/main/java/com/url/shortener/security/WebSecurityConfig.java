@@ -39,7 +39,7 @@ public class WebSecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
-
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(
                 auth ->
@@ -48,7 +48,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/urls/**").authenticated().anyRequest().authenticated()
 
         );
-        httpSecurity.authenticationProvider(authenticationProvider())
+        httpSecurity.authenticationProvider(authenticationProvider());
         httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
 

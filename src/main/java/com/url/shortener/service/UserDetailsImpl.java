@@ -22,15 +22,15 @@ public class UserDetailsImpl implements UserDetails {
 
     private Long id;
     private String email;
-    private String username;
+    private String userName;
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String email, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String email, String userName, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
-        this.username = username;
+        this.userName = userName;
         this.password = password;
         this.authorities = authorities;
     }
