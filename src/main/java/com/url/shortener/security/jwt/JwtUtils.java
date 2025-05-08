@@ -15,7 +15,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-@Component // ✅ Register this class as a Spring bean
+@Component
 public class JwtUtils {
 
     @Value("${jwt.secret}")
