@@ -4,6 +4,7 @@ import com.url.shortener.dtos.LoginRequest;
 import com.url.shortener.models.User;
 import com.url.shortener.repository.UserRepository;
 import com.url.shortener.security.jwt.JwtAuthenticationResponse;
+import com.url.shortener.security.jwt.JwtUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
     public boolean existsByUserName(String userName) {
         return userRepository.findByUserName(userName).isPresent();
@@ -47,7 +49,10 @@ public class UserService {
 
         );
                  SecurityContextHolder.getContext().setAuthentication(authentication);
-        return null;
+                 UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+                 String jwt = jwtUtils.generateToken(userDetails);
+
+        return new JwtAuthenticationResponse(jwt);
     }
 
 

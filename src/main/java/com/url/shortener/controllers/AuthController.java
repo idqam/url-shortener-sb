@@ -19,7 +19,8 @@ public class AuthController {
 
 
 
-    @PostMapping("/public/register")
+
+    @PostMapping("/public/login")
     public ResponseEntity<?> loginUser (@RequestBody LoginRequest loginRequest){
         return ResponseEntity.ok(userService.authUser(loginRequest));
     }

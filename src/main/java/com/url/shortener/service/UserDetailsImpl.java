@@ -50,17 +50,14 @@ public class UserDetailsImpl implements UserDetails {
 
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
-
+    public Collection<? extends GrantedAuthority> getAuthorities() { return authorities; }
     @Override
     public String getPassword() {
-        return "";
+        return userName;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return password;
     }
 }
