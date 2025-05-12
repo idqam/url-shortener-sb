@@ -135,8 +135,8 @@ public class UrlMappingService {
 
     public Map<LocalDate, Long> getTotalClicksByUserAndDate(
             User user,
-            LocalDateTime start,
-            LocalDateTime end
+            LocalDate start,
+            LocalDate end
     ) {
         List<UrlMapping> urlMappings = urlMappingRepository.findByUser(user);
         if (urlMappings == null || urlMappings.isEmpty()) {
@@ -144,7 +144,7 @@ public class UrlMappingService {
         }
 
         List<ClickEvent> clickEvents = clickEventRepository
-                .findByUrlMappingInAndClickDateBetween(urlMappings, start, end);
+                .findByUrlMappingInAndClickDateBetween(urlMappings, start.atStartOfDay(), end.plusDays(1).atStartOfDay());
 
         return clickEvents.stream()
                 .collect(Collectors.groupingBy(
