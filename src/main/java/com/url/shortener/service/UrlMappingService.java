@@ -2,14 +2,19 @@ package com.url.shortener.service;
 
 import com.url.shortener.dtos.ClickEventDTO;
 import com.url.shortener.dtos.UrlMappingDTO;
+import com.url.shortener.models.ClickEvent;
 import com.url.shortener.models.UrlMapping;
 import com.url.shortener.models.User;
+import com.url.shortener.repository.ClickEventRepository;
 import com.url.shortener.repository.UrlMappingRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -18,6 +23,7 @@ import java.util.stream.Collectors;
 public class UrlMappingService {
 
     private UrlMappingRepository urlMappingRepository;
+    private ClickEventRepository clickEventRepository;
     // All URL-safe alphanumeric characters
     private final String URL_SAFE_CHARS =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +  // upper-case
@@ -97,12 +103,34 @@ public class UrlMappingService {
 
     }
 
-    public List<ClickEventDTO> getClickEventsByDate(String shortUrl, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<ClickEventDTO> getClickEventsByDate(
+            String shortUrl,
+            LocalDateTime startDate,
+            LocalDateTime endDate
+    ) {
         UrlMapping urlMapping = urlMappingRepository.findByShortUrl(shortUrl);
-        if (urlMapping != null){
-
+        if (urlMapping == null) {
+            return Collections.emptyList();
         }
 
+        List<ClickEvent> events = clickEventRepository
+                .findByUrlMappingAndClickDateBetween(urlMapping, startDate, endDate);
 
+        Map<LocalDate, Long> countsByDate = events.stream()
+                .collect(Collectors.groupingBy(
+                        click -> click.getClickDate().toLocalDate(),
+                        Collectors.counting()
+                ));
+
+        return countsByDate.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())  // optional: sort by date
+                .map(entry -> {
+                    ClickEventDTO dto = new ClickEventDTO();
+                    dto.setClickDate(entry.getKey());
+                    dto.setCount(entry.getValue());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
+
 }
