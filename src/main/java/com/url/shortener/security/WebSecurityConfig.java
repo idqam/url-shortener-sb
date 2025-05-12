@@ -43,18 +43,25 @@ public class WebSecurityConfig {
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(
-                auth ->
-                        auth.requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/{shortUrl}").permitAll()
-                                .requestMatchers("/api/urls/**").authenticated().anyRequest().authenticated()
+        httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/{shortUrl}").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
+                        .requestMatchers("/api/urls/**").authenticated()
+                        .anyRequest().authenticated()
+                );
 
-        );
         httpSecurity.authenticationProvider(authenticationProvider());
         httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         return httpSecurity.build();
-
-
     }
 
     @Bean
