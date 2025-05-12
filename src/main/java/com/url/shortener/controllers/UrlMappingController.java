@@ -15,6 +15,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -75,7 +76,29 @@ public class UrlMappingController {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         LocalDateTime start = LocalDateTime.parse(startDate.toString(), formatter);
         LocalDateTime end = LocalDateTime.parse(endDate.toString(), formatter);
-        urlMappingService.getClickEventsByDate(shortUrl, startDate, endDate);
+        List<ClickEventDTO> clickEventDTOS =  urlMappingService.getClickEventsByDate(shortUrl, start, end);
+
+        return ResponseEntity.ok(clickEventDTOS);
 
     }
+
+    @GetMapping("/totalClicks}")
+    @PreAuthorize("hasRole('User')")
+    public ResponseEntity<Map<LocalDate, Long>> getTotalClicksByDate(Principal principal, @RequestParam("startDate") LocalDateTime startDate,
+                                                                @RequestParam("endDate") LocalDateTime endDate){
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        Optional<User> user = userService.findByUserName(principal.getName());
+        User user2 = null;
+        if (user.isPresent()) {
+            user2 = user.get();
+        }
+        LocalDateTime start = LocalDateTime.parse(startDate.toString(), formatter);
+        LocalDateTime end = LocalDateTime.parse(endDate.toString(), formatter);
+        Map<LocalDate, Long> totalClicks =  urlMappingService.getTotalClicksByUserAndDate(user2, start, end);
+        return ResponseEntity.ok(totalClicks);
+
+
+
+    }
+
 }

@@ -133,4 +133,23 @@ public class UrlMappingService {
                 .collect(Collectors.toList());
     }
 
+    public Map<LocalDate, Long> getTotalClicksByUserAndDate(
+            User user,
+            LocalDateTime start,
+            LocalDateTime end
+    ) {
+        List<UrlMapping> urlMappings = urlMappingRepository.findByUser(user);
+        if (urlMappings == null || urlMappings.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        List<ClickEvent> clickEvents = clickEventRepository
+                .findByUrlMappingInAndClickDateBetween(urlMappings, start, end);
+
+        return clickEvents.stream()
+                .collect(Collectors.groupingBy(
+                        ev -> ev.getClickDate().toLocalDate(),
+                        Collectors.counting()
+                ));
+    }
 }
